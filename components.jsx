@@ -96,7 +96,11 @@ function ProjectCard({ project, onOpen, big }) {
   return (
     <article className={"pf-card" + (big ? "" : " span4")} onClick={() => onOpen(project)}>
       <div className="pf-card-art">
-        <ProjectArt hue={project.hue} label={project.playable ? "jugable ↗" : project.placeholder ? "próximamente" : "captura del proyecto"} />
+        {project.image ? (
+          <img src={project.image} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        ) : (
+          <ProjectArt hue={project.hue} label={project.playable ? "jugable ↗" : project.placeholder ? "próximamente" : "captura del proyecto"} />
+        )}
         <span className={"pf-badge" + (project.example || project.placeholder ? " muted" : "")}>{project.catLabel}</span>
         {project.playable && <span className="pf-play-hint"><Icon name="play" size={14} /></span>}
       </div>

@@ -47,6 +47,7 @@ window.PF_DATA = {
       year: "2025",
       featured: true,
       playable: "pong",
+      image: "images/pong.png",
       desc: "El clásico de los clásicos, reescrito desde cero en Canvas. Física de rebote, IA rival y marcador a 5.",
       long:
         "Mi homenaje al juego que lo empezó todo. Implementado a mano con la API de Canvas: " +
@@ -65,6 +66,7 @@ window.PF_DATA = {
       year: "2025",
       featured: true,
       playable: "memorion",
+      image: "images/memorion.png",
       desc: "Juego de memoria con cartas. Encuentra todas las parejas en el menor número de intentos.",
       long:
         "Un juego de parejas con animación de volteo en 3D (CSS transforms), barajado aleatorio " +
@@ -82,6 +84,7 @@ window.PF_DATA = {
       year: "2025",
       featured: true,
       playable: null,
+      image: "images/internet-checkpoint.png",
       link: "#",
       desc: "Una web-experiencia que captura un instante de internet: cuánta gente está aquí, ahora mismo, contigo.",
       long:
@@ -100,6 +103,7 @@ window.PF_DATA = {
       year: "2026",
       featured: false,
       playable: null,
+      image: "images/prompt-lab.png",
       link: "#",
       example: true,
       desc: "Banco de pruebas para iterar prompts de IA: variantes lado a lado, variables y comparación de salidas.",
@@ -119,6 +123,7 @@ window.PF_DATA = {
       year: "2026",
       featured: false,
       playable: null,
+      image: "images/garden.png",
       link: "#",
       example: true,
       desc: "Jardín generativo: plantas que crecen con sistemas-L y ruido. Cada recarga, un ecosistema distinto.",
@@ -138,6 +143,7 @@ window.PF_DATA = {
       year: "2026",
       featured: false,
       playable: null,
+      image: "images/placeholder.png",
       link: "#",
       placeholder: true,
       desc: "Hueco reservado para lo siguiente que construyas. Duplica una tarjeta y rellénala cuando lo publiques.",
