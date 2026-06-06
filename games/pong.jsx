@@ -1,9 +1,5 @@
-/* Juegos jugables: Pong y Memorión.
-   Exportados a window para usarse en el modal de detalle. */
-
 const { useRef, useEffect, useState, useCallback } = React;
 
-/* helper: lee un color del tema desde las CSS vars del root .pf */
 function pfVar(name, fallback) {
   const root = document.querySelector(".pf");
   if (!root) return fallback;
@@ -11,7 +7,6 @@ function pfVar(name, fallback) {
   return v || fallback;
 }
 
-/* ============================ PONG ============================ */
 function PongGame() {
   const canvasRef = useRef(null);
   const stateRef = useRef(null);
@@ -37,7 +32,6 @@ function PongGame() {
 
   useEffect(() => { init(); }, [init]);
 
-  // input
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -57,7 +51,6 @@ function PongGame() {
     return () => { canvas.removeEventListener("mousemove", onMove); window.removeEventListener("keydown", onKey); };
   }, []);
 
-  // loop
   useEffect(() => {
     if (!running) return;
     const ctx = canvasRef.current.getContext("2d");
@@ -69,17 +62,14 @@ function PongGame() {
       const faint = pfVar("--border", "#333");
       const bg = pfVar("--bg", "#0a0a0a");
 
-      // AI follow (imperfect)
       const target = s.by - PAD_H / 2;
       const diff = target - s.ay;
       s.ay += Math.max(-4.3, Math.min(4.3, diff * 0.09));
       s.ay = Math.max(0, Math.min(H - PAD_H, s.ay));
 
-      // move ball
       s.bx += s.vx; s.by += s.vy;
       if (s.by < BALL || s.by > H - BALL) { s.vy *= -1; s.by = Math.max(BALL, Math.min(H - BALL, s.by)); }
 
-      // paddle collisions
       if (s.bx - BALL < PAD_W + 6 && s.by > s.py && s.by < s.py + PAD_H && s.vx < 0) {
         s.vx = Math.abs(s.vx) * 1.04;
         s.vy += ((s.by - (s.py + PAD_H / 2)) / (PAD_H / 2)) * 3.4;
@@ -90,7 +80,6 @@ function PongGame() {
       }
       s.vx = Math.max(-11, Math.min(11, s.vx));
 
-      // scoring
       let scored = false;
       if (s.bx < -10) { s.ai += 1; scored = true; }
       if (s.bx > W + 10) { s.p += 1; scored = true; }
@@ -107,7 +96,6 @@ function PongGame() {
         }
       }
 
-      // draw
       ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
       ctx.strokeStyle = faint; ctx.setLineDash([8, 12]); ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(W / 2, 0); ctx.lineTo(W / 2, H); ctx.stroke(); ctx.setLineDash([]);
@@ -123,7 +111,6 @@ function PongGame() {
     return () => cancelAnimationFrame(rafRef.current);
   }, [running]);
 
-  // paint a static frame when not running
   useEffect(() => {
     if (running) return;
     const ctx = canvasRef.current.getContext("2d");
@@ -162,87 +149,3 @@ function PongGame() {
     </div>
   );
 }
-
-/* ========================== MEMORIÓN ========================== */
-const MEM_GLYPHS = ["🌲", "🍄", "🦊", "🌙", "🎮", "⚡", "🐦", "🌿"];
-
-function shuffle(arr) {
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-function freshDeck() {
-  return shuffle([...MEM_GLYPHS, ...MEM_GLYPHS]).map((g, i) => ({ id: i, g, up: false, matched: false }));
-}
-
-function MemorionGame() {
-  const [deck, setDeck] = useState(freshDeck);
-  const [sel, setSel] = useState([]);
-  const [moves, setMoves] = useState(0);
-  const [locked, setLocked] = useState(false);
-
-  const won = deck.every((c) => c.matched);
-
-  const flip = (idx) => {
-    if (locked) return;
-    const card = deck[idx];
-    if (card.up || card.matched) return;
-    const nd = deck.map((c, i) => (i === idx ? { ...c, up: true } : c));
-    setDeck(nd);
-    const ns = [...sel, idx];
-    setSel(ns);
-    if (ns.length === 2) {
-      setMoves((m) => m + 1);
-      setLocked(true);
-      const [a, b] = ns;
-      if (nd[a].g === nd[b].g) {
-        setTimeout(() => {
-          setDeck((d) => d.map((c, i) => (i === a || i === b ? { ...c, matched: true } : c)));
-          setSel([]); setLocked(false);
-        }, 480);
-      } else {
-        setTimeout(() => {
-          setDeck((d) => d.map((c, i) => (i === a || i === b ? { ...c, up: false } : c)));
-          setSel([]); setLocked(false);
-        }, 760);
-      }
-    }
-  };
-
-  const reset = () => { setDeck(freshDeck()); setSel([]); setMoves(0); setLocked(false); };
-
-  const pairs = deck.filter((c) => c.matched).length / 2;
-
-  return (
-    <div>
-      <div className="pf-stage-bar">
-        <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-          <span className="pf-score">{pairs}<span style={{ opacity: .35 }}>/8</span></span>
-          <span className="pf-stage-label">{won ? `¡Completado en ${moves} intentos!` : `${moves} intentos`}</span>
-        </div>
-        <button className="pf-game-btn" onClick={reset}>{won ? "Jugar otra vez" : "Barajar"}</button>
-      </div>
-      <div className="pf-mem-grid">
-        {deck.map((c, i) => (
-          <div
-            key={c.id}
-            className={"pf-mem-cell" + (c.up || c.matched ? " up" : "") + (c.matched ? " matched" : "")}
-            onClick={() => flip(i)}
-          >
-            {c.up || c.matched
-              ? <span className="pf-mem-face">{c.g}</span>
-              : <span className="pf-mem-back">?</span>}
-          </div>
-        ))}
-      </div>
-      <p style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-faint)", marginTop: 14, marginBottom: 0, textAlign: "center" }}>
-        Encuentra las 8 parejas en el menor número de intentos.
-      </p>
-    </div>
-  );
-}
-
-Object.assign(window, { PongGame, MemorionGame });
