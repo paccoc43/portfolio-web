@@ -93,11 +93,18 @@ function Hero({ data }) {
 
 /* ---- Card ---- */
 function ProjectCard({ project, onOpen, big }) {
+  const [imageError, setImageError] = useStateC(false);
+
   return (
     <article className={"pf-card" + (big ? "" : " span4")} onClick={() => onOpen(project)}>
       <div className="pf-card-art">
-        {project.image ? (
-          <img src={project.image} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        {project.image && !imageError ? (
+          <img
+            src={project.image}
+            alt={project.title}
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            onError={() => setImageError(true)}
+          />
         ) : (
           <ProjectArt hue={project.hue} label={project.playable ? "jugable ↗" : project.placeholder ? "próximamente" : "captura del proyecto"} />
         )}
