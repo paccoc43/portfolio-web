@@ -1,0 +1,25 @@
+# Claude y agentes
+.claude/
+.agents/
+skills-lock.json
+
+# Dependencies
+node_modules/
+*.pnp
+.pnp.js
+
+# Testing
+coverage/
+
+# Production
+build/
+dist/
+
+# Misc
+.DS_Store
+.env
+.env.local
+.env.*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
