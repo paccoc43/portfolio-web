@@ -11,6 +11,7 @@ function PongGame() {
   const canvasRef = useRef(null);
   const stateRef = useRef(null);
   const rafRef = useRef(0);
+  const keysRef = useRef({ up: false, down: false });
   const [score, setScore] = useState({ p: 0, ai: 0 });
   const [running, setRunning] = useState(false);
   const [winner, setWinner] = useState(null);
@@ -41,22 +42,36 @@ function PongGame() {
       const y = ((e.clientY - rect.top) / rect.height) * H;
       s.py = Math.max(0, Math.min(H - PAD_H, y - PAD_H / 2));
     };
-    const onKey = (e) => {
-      const s = stateRef.current; if (!s) return;
-      if (e.key === "ArrowUp") s.py = Math.max(0, s.py - 26);
-      if (e.key === "ArrowDown") s.py = Math.min(H - PAD_H, s.py + 26);
+    const onKeyDown = (e) => {
+      if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+      e.preventDefault();
+      if (e.key === "ArrowUp") keysRef.current.up = true;
+      if (e.key === "ArrowDown") keysRef.current.down = true;
+    };
+    const onKeyUp = (e) => {
+      if (e.key === "ArrowUp") keysRef.current.up = false;
+      if (e.key === "ArrowDown") keysRef.current.down = false;
     };
     canvas.addEventListener("mousemove", onMove);
-    window.addEventListener("keydown", onKey);
-    return () => { canvas.removeEventListener("mousemove", onMove); window.removeEventListener("keydown", onKey); };
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
+    return () => {
+      canvas.removeEventListener("mousemove", onMove);
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("keyup", onKeyUp);
+    };
   }, []);
 
   useEffect(() => {
     if (!running) return;
     const ctx = canvasRef.current.getContext("2d");
 
+    const PADDLE_SPEED = 7;
     const step = () => {
       const s = stateRef.current;
+      const keys = keysRef.current;
+      if (keys.up) s.py = Math.max(0, s.py - PADDLE_SPEED);
+      if (keys.down) s.py = Math.min(H - PAD_H, s.py + PADDLE_SPEED);
       const accent = pfVar("--accent", "#5bbf7a");
       const text = pfVar("--text", "#e0e0e0");
       const faint = pfVar("--border", "#333");

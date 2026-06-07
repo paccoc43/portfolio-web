@@ -12,12 +12,12 @@ window.PF_DATA = {
       "tocar y jugar. Entre línea y línea, videojuegos y naturaleza.",
     location: "España",
     available: "Disponible para proyectos freelance",
-    email: "hola@franciscosy.dev",
+    email: "pacorri123@hotmail.com",
     socials: [
-      { label: "GitHub", href: "#" },
-      { label: "LinkedIn", href: "#" },
+      { label: "GitHub", href: "https://github.com/paccoc43" },
+      { label: "LinkedIn", href: "https://www.linkedin.com/in/francisco-s%C3%A1nchez-yeste-6a2a5b274/" },
       { label: "itch.io", href: "#" },
-      { label: "Email", href: "#" },
+      { label: "Email", href: "mailto:pacorri123@hotmail.com" },
     ],
     stats: [
       { n: "6+", l: "proyectos publicados" },
