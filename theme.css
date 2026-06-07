@@ -309,6 +309,7 @@ body { background: #0a0a0a; }
 .pf-score { font-family: var(--font-display); font-size: 26px; font-weight: 700; letter-spacing: .04em; }
 .pf-mem-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 380px; margin: 0 auto; }
 .pf-mem-cell {
+  appearance: none; -webkit-appearance: none; padding: 0; font: inherit; color: inherit;
   aspect-ratio: 1; border-radius: var(--radius); border: 1px solid var(--border); cursor: pointer;
   display: grid; place-items: center; font-size: clamp(22px, 5vw, 30px); position: relative;
   background: var(--bg-elev); transition: transform .3s var(--ease), background .3s; transform-style: preserve-3d;
